@@ -24,8 +24,9 @@ The implementations are based on the following publications:
    Datasets",
    Michael J. Anderson, Mihai Capotă, Javier S. Turek, Xia Zhu, Theodore L.
    Willke, Yida Wang, Po-Hsuan Chen, Jeremy R. Manning, Peter J. Ramadge,
-   Kenneth A. Norman, arXiv preprint, 2016.
-   https://arxiv.org/abs/1608.04647
+   Kenneth A. Norman,
+   IEEE International Conference on Big Data, 2016.
+   https://doi.org/10.1109/BigData.2016.7840719
 """
 
 # Authors: Po-Hsuan Chen (Princeton Neuroscience Institute) and Javier Turek
@@ -70,10 +71,13 @@ def _init_w_transforms(data, features):
         A list with the number of voxels per subject.
 
 
-    .. note:: This function assumes that the numpy random number generator was
-       initialized.
+    Note
+    ----
 
-       Not thread safe.
+        This function assumes that the numpy random number generator was
+        initialized.
+
+        Not thread safe.
     """
     w = []
     subjects = len(data)
@@ -95,7 +99,7 @@ class SRM(BaseEstimator, TransformerMixin):
     Given multi-subject data, factorize it as a shared response S among all
     subjects and an orthogonal transform W per subject:
 
-    .. math:: X_i \\approx W_i S ,~for~all~i=1\dots N
+    .. math:: X_i \\approx W_i S, \\forall i=1 \\dots N
 
     Parameters
     ----------
@@ -129,7 +133,9 @@ class SRM(BaseEstimator, TransformerMixin):
         The estimated noise variance :math:`\\rho_i^2` for each subject
 
 
-    .. note::
+    Note
+    ----
+
        The number of voxels may be different between subjects. However, the
        number of samples must be the same across subjects.
 
@@ -428,7 +434,7 @@ class DetSRM(BaseEstimator, TransformerMixin):
     Given multi-subject data, factorize it as a shared response S among all
     subjects and an orthogonal transform W per subject:
 
-    .. math:: X_i \\approx W_i S ,~for~all~i=1\dots N
+    .. math:: X_i \\approx W_i S, \\forall i=1 \\dots N
 
     Parameters
     ----------
@@ -452,20 +458,22 @@ class DetSRM(BaseEstimator, TransformerMixin):
     s_ : array, shape=[features, samples]
         The shared response.
 
-    .. note::
-       The number of voxels may be different between subjects. However, the
-       number of samples must be the same across subjects.
+    Note
+    ----
 
-       The Deterministic Shared Response Model is approximated using the
-       Block Coordinate Descent (BCD) algorithm proposed in [Chen2015]_.
+        The number of voxels may be different between subjects. However, the
+        number of samples must be the same across subjects.
 
-       This is a single node version.
+        The Deterministic Shared Response Model is approximated using the
+        Block Coordinate Descent (BCD) algorithm proposed in [Chen2015]_.
 
-       The run-time complexity is :math:`O(I (V T K + V K^2))` and the memory
-       complexity is :math:`O(V T)` with I - the number of iterations, V - the
-       sum of voxels from all subjects, T - the number of samples, K - the
-       number of features (typically, :math:`V \\gg T \\gg K`), and N - the
-       number of subjects.
+        This is a single node version.
+
+        The run-time complexity is :math:`O(I (V T K + V K^2))` and the memory
+        complexity is :math:`O(V T)` with I - the number of iterations, V - the
+        sum of voxels from all subjects, T - the number of samples, K - the
+        number of features (typically, :math:`V \\gg T \\gg K`), and N - the
+        number of subjects.
     """
 
     def __init__(self, n_iter=10, features=50, rand_seed=0):

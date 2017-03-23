@@ -33,7 +33,8 @@ Linux
 
 Install the following packages (Ubuntu 14.04 is used in these instructions)::
 
-    apt install build-essential cmake libgomp1 mpich python3-pip
+    apt install build-essential libgomp1 libmpich-dev mpich python3-dev \
+        python3-pip
 
 Install updated version of the following Python packages::
 
@@ -79,6 +80,10 @@ will seek for compiling and linking::
     export LDFLAGS="-L/usr/local/opt/llvm/lib $LDFLAGS"
     export CPPFLAGS="-I/usr/local/opt/llvm/include $CPPFLAGS"
 
+You also need to add the installed LLVM libraries to the search path::
+
+    export DYLD_LIBRARY_PATH="/usr/local/opt/llvm/lib:$DYLD_LIBRARY_PATH"
+
 Install updated versions of the following Python packages::
 
     pip3 install -U pip virtualenv
@@ -114,3 +119,14 @@ We welcome contributions. Please read the guide in `CONTRIBUTING.rst`_.
 
 .. _CONTRIBUTING.rst:
    https://github.com/IntelPNI/brainiak/blob/master/CONTRIBUTING.rst
+
+
+Citing
+======
+
+Please cite BrainIAK in your publications as: "Brain Imaging Analysis Kit,
+http://brainiak.org." Additionally, if you use `RRIDs
+<https://scicrunch.org/resolver>`_ to identify resources, please mention
+BrainIAK as "Brain Imaging Analysis Kit, RRID:SCR_014824". Finally, please cite
+the publications referenced in the documentation of the BrainIAK modules you
+use, e.g., `SRM <http://pythonhosted.org/brainiak/brainiak.funcalign.html>`_.

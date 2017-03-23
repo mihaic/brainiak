@@ -33,7 +33,7 @@ ext_modules = [
         ['brainiak/fcma/cython_blas.pyx'],
     ),
     Extension(
-        'brainiak.eventseg.utils',
+        'brainiak.eventseg._utils',
         ['brainiak/eventseg/_utils.pyx'],
     ),
 ]
@@ -111,6 +111,7 @@ class BuildExt(build_ext):
         ])
 
 
+
 setup(
     name='brainiak',
     use_scm_version=True,
@@ -123,12 +124,15 @@ setup(
     install_requires=[
         'cython',
         'mpi4py',
+        'nitime',
         'numpy',
-        'scikit-learn>=0.18',
+        'scikit-learn[alldeps]>=0.18',
         'scipy',
         'pymanopt',
         'theano',
         'pybind11>=1.7',
+        'pathos',
+        'nibabel'
     ],
     author='Princeton Neuroscience Institute and Intel Corporation',
     author_email='bryn.keller@intel.com',
@@ -140,5 +144,7 @@ setup(
     ext_modules=ext_modules,
     cmdclass={'build_ext': BuildExt},
     packages=find_packages(),
+    package_data={'brainiak.utils': ['grey_matter_mask.npy']},
+    python_requires='>=3.4',
     zip_safe=False,
 )
