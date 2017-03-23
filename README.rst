@@ -80,6 +80,10 @@ will seek for compiling and linking::
     export LDFLAGS="-L/usr/local/opt/llvm/lib $LDFLAGS"
     export CPPFLAGS="-I/usr/local/opt/llvm/include $CPPFLAGS"
 
+You also need to add the installed LLVM libraries to the search path::
+
+    export DYLD_LIBRARY_PATH="/usr/local/opt/llvm/lib:$DYLD_LIBRARY_PATH"
+
 Install updated versions of the following Python packages::
 
     pip3 install -U pip virtualenv
