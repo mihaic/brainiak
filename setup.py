@@ -127,6 +127,7 @@ setup(
         'numpy',
         'scikit-learn[alldeps]>=0.18',
         'scipy',
+        'pybids',
         'pymanopt',
         'theano',
         'pybind11>=1.7',

@@ -26,11 +26,13 @@ from typing import Callable, Iterable, List, Union
 import logging
 import nibabel as nib
 import numpy as np
+import pkg_resources
 
+from bids.grabbids import BIDSLayout
 from nibabel.nifti1 import Nifti1Pair
 from nibabel.spatialimages import SpatialImage
 
-from .image import SingleConditionSpec
+from .image import mask_image, SingleConditionSpec
 
 logger = logging.getLogger(__name__)
 
@@ -160,3 +162,53 @@ def save_as_nifti_file(data: np.ndarray, affine: np.ndarray,
         path = str(path)
     img = Nifti1Pair(data, affine)
     nib.nifti1.save(img, path)
+
+
+def load_bids(bids_root: Path, task: str = None, space: str = None
+              ) -> Iterable[np.ndarray]:
+    """Create masked images from a BIDS dataset.
+
+    Parameter
+    ---------
+    bids_root
+        Path to root of BIDS dataset.
+    task
+        Task to load. Must be specified for multi-task datasets.
+    space
+        Registration space to load. Must be specified for multi-space datasets.
+
+    Yields
+    ------
+    np.ndarray
+        Masked image.
+    """
+    config_path = pkg_resources.resource_filename("brainiak", "bids.json")
+    layout = BIDSLayout(str(bids_root), config=config_path)
+    subjects = layout.get_subjects()
+    if len(layout.get_tasks()) > 1 and task is None:
+        raise ValueError("Must specify task for multi-task datasets.")
+    general_args = {"modality": "func"}
+    spaces = layout.get_spaces()
+    if space is not None:
+        if space not in spaces:
+            raise ValueError("Given space not in dataset.")
+        general_args["space"] = space
+    tasks = layout.get_tasks()
+    if task is not None:
+        if task not in tasks:
+            raise ValueError("Given task not in dataset.")
+        general_args["task"] = task
+    for s in subjects:
+        subject_args = general_args.copy()
+        subject_args["subject"] = s
+        image_args = subject_args.copy()
+        image_args["type"] = "preproc"
+        images = layout.get(**image_args)
+        assert len(images) == 1, images
+        image = nib.load(images[0].filename)
+        mask_args = subject_args.copy()
+        mask_args["type"] = "brainmask"
+        masks = layout.get(**mask_args)
+        assert len(masks) == 1, masks
+        mask = load_boolean_mask(masks[0].filename)
+        yield mask_image(image, mask)
