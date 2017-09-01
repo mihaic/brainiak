@@ -181,13 +181,19 @@ def load_bids(bids_root: Path, task: str = None, space: str = None
     ------
     np.ndarray
         Masked image.
+
+    Raises
+    ------
+    ValueError
+        Given task not in dataset.
+        Given space not in dataset.
     """
     config_path = pkg_resources.resource_filename("brainiak", "bids.json")
     layout = BIDSLayout(str(bids_root), config=config_path)
     subjects = layout.get_subjects()
     if len(layout.get_tasks()) > 1 and task is None:
         raise ValueError("Must specify task for multi-task datasets.")
-    general_args = {"modality": "func"}
+    general_args = {"modality": "func", "extensions": "nii.gz"}
     spaces = layout.get_spaces()
     if space is not None:
         if space not in spaces:
