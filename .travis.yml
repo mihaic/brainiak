@@ -14,5 +14,8 @@ matrix:
           packages:
             - build-essential libgomp1 libmpich-dev mpich
 
+install:
+    - python3 -m pip install -U pip
+
 script:
     - ./pr-check.sh
