@@ -114,12 +114,6 @@ class BuildExt(build_ext):
 setup(
     name='brainiak',
     use_scm_version=True,
-    setup_requires=[
-        'cython',
-        'numpy',
-        'pybind11>=1.7',
-        'setuptools_scm',
-    ],
     install_requires=[
         'cython',
         # Previous versions fail of the Anaconda package fail on MacOS:
